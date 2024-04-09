@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Design</title>
+    <link rel="stylesheet" href="homeScreen.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">PEMS</div>
+        <ul class="menu">
+            <li class="active">
+                <a href="#">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa-solid fa-vault"></i>
+                    <span>Accounts</span>
+                </a>
+                <ul>
+                    <li>
+                        <a href="#" class="sidebar-link">Account 1</a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link">Account 2</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="add-account-btn">
+                    <span>Add Account</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="add-loan-btn">
+                    <span>Add Loan</span>
+                </a>
+            </li>
+            <li class="logout">
+                <a href="index.html">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- Main Content -->
+    <div class="main--content">
+
+        <div class="card--container">
+            <div class="card--wrapper">
+                <div class="payment--card light--red">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">
+                                Total Income
+                            </span>
+                            <span class="amount--value">$50000.00</span>
+                        </div>
+                        <i class="fas fa-pound-sign icon"></i>
+                    </div>
+                </div>
+
+                <div class="payment--card light--purple">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">
+                                Expenses
+                            </span>
+                            <span class="amount--value">$2000.00</span>
+                        </div>
+                        <i class="fas fa-list icon dark--purple"></i>
+                    </div>
+                </div>
+
+                <div class="payment--card light--green">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">
+                                Loan Amount
+                            </span>
+                            <span class="amount--value">$3000.00</span>
+                        </div>
+                        <i class="fas fa-users icon dark--green"></i>
+                    </div>
+                </div>
+
+                <div class="payment--card light--blue">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">
+                                Balance Amount
+                            </span>
+                            <span class="amount--value">$45000.00</span>
+                        </div>
+                        <i class="fa-solid fa-check icon dark--blue"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header--wrapper">
+            <div class="header--title">
+                <h2>List of Expenses</h2>
+            </div>
+            <i class="fa-solid fa-plus add-expense-btn"></i>
+                <div class="search--box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search">
+                </div>
+        </div>
+
+        <div class="tabular--wrapper">
+            <div class="table--container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Office Supplies</td>
+                            <td>2023-02-05</td>
+                            <td>$25</td>
+                            <td><button class="edit-expense-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-expense-btn"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Office Supplies</td>
+                            <td>2023-02-05</td>
+                            <td>$25</td>
+                            <td><button class="edit-expense-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-expense-btn"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Office Supplies</td>
+                            <td>2023-02-05</td>
+                            <td>$25</td>
+                            <td><button class="edit-expense-btn"><i class="fas fa-edit"></i></button>
+                                <button class="delete-expense-btn"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Account Form -->
+    <div id="addAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Account</h2>
+            <form id="addAccountForm">
+                <input type="text" placeholder="Account Name" required>
+                <input type="number" placeholder="Initial Balance" required>
+                <button type="submit">Add Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Loan Form -->
+    <div id="addLoanModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Loan</h2>
+            <form id="addLoanForm">
+                <input type="text" placeholder="Loan Type" required>
+                <input type="number" placeholder="Loan Amount" required>
+                <input type="date" placeholder="Loan Date" required>
+                <button type="submit">Add Loan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Expense Form -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="expenseModalTitle">Add Expense</h2>
+            <form id="expenseForm">
+                <input type="text" placeholder="Category" required>
+                <input type="date" placeholder="Date" required>
+                <input type="number" placeholder="Amount" required>
+                <button type="submit" id="expenseSubmitButton">Add Expense</button>
+            </form>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
