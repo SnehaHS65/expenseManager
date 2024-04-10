@@ -1,11 +1,14 @@
 package com.user.pems.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.user.pems.dto.Account;
+import com.user.pems.dto.Expense;
 import com.user.pems.dto.User;
 import com.user.pems.repository.UserRepository;
 
@@ -40,7 +43,6 @@ public class UserService {
             existingUser.setDateJoined(user.getDateJoined());
             existingUser.setAccounts(user.getAccounts());
             existingUser.setExpenses(user.getExpenses());
-            existingUser.setLoans(user.getLoans());
             
             return userRepository.save(existingUser);
         }
@@ -53,4 +55,76 @@ public class UserService {
             userRepository.delete(userToDelete);
         }
     }
+    
+    public List<Expense> getAllExpensesByUsernameAndAccountNo(String username, String accountNo) {
+        User user = getUserByUsername(username);
+        if (user != null) {
+            List<Account> accounts = user.getAccounts();
+            for (Account account : accounts) {
+                if (account.getAccountNo().equals(accountNo)) {
+                    List<Integer> expenseIds = account.getExpenseId();
+                    List<Expense> expenses = new ArrayList<>();
+                    for (int expenseId : expenseIds) {
+                        for (Expense expense : user.getExpenses()) {
+                         if (expense.getExpenseId() == expenseId) {
+                         expenses.add(expense);
+                                break;
+                            }
+                        }
+                    }
+                    return expenses;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public User addAccount(String username, Account newAccount) {
+        User existingUser = userRepository.findByUsername(username).orElse(null);
+        if (existingUser != null) {
+         if (existingUser.getAccounts() == null) {
+                existingUser.setAccounts(new ArrayList<>());
+            }
+            existingUser.getAccounts().add(newAccount);
+            return userRepository.save(existingUser);
+        }
+        return null; 
+    }
+    
+    public User addExpense(String username, String accountNo, Expense newExpense) {
+        User existingUser = getUserByUsername(username);
+        if (existingUser != null) {
+            // Initialize expenses list if null
+            if (existingUser.getExpenses() == null) {
+                existingUser.setExpenses(new ArrayList<>());
+            }
+            // Get existing expenses
+            List<Expense> existingExpenses = existingUser.getExpenses();
+           
+            // Generate the expenseId
+            int expenseId = Expense.getNextId(existingExpenses);
+            newExpense.setExpenseId(expenseId);
+
+            // Add the new expense to the user's expenses
+            existingExpenses.add(newExpense);
+
+            // Update the list of expenseIds in the account
+            List<Account> accounts = existingUser.getAccounts();
+            for (Account account : accounts) {
+                if (account.getAccountNo().equals(accountNo)) {
+                    // Initialize expenseId list if null
+                    if (account.getExpenseId() == null) {
+                        account.setExpenseId(new ArrayList<>());
+                    }
+                    account.getExpenseId().add(expenseId);
+                    break;
+                }
+            }
+
+            // Save the updated user
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
+
 }

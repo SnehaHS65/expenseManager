@@ -139,7 +139,9 @@
                 if (response.ok) {
                     alert("User saved successfully");
                 } else {
-                    alert("Failed to save user");
+                    response.text().then(errorMessage => {
+                        alert(errorMessage);
+                    });
                 }
             })
             .catch(error => {

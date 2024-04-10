@@ -24,7 +24,6 @@ public class User {
     private String dateJoined;
     private List<Account> accounts;
     private List<Expense> expenses;
-    private List<Loan> loans;
 	public String getId() {
 		return id;
 	}
@@ -67,12 +66,7 @@ public class User {
 	public void setExpenses(List<Expense> expenses) {
 		this.expenses = expenses;
 	}
-	public List<Loan> getLoans() {
-		return loans;
-	}
-	public void setLoans(List<Loan> loans) {
-		this.loans = loans;
-	}
+
     
 
 }
