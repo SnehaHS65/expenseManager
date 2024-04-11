@@ -117,6 +117,11 @@ public class UserService {
                         account.setExpenseId(new ArrayList<>());
                     }
                     account.getExpenseId().add(expenseId);
+                 // Update balanceAmount
+                    double currentBalance = account.getBalance();
+                    double expenseAmount = newExpense.getExpenseAmount();
+                    double updatedBalance = currentBalance - expenseAmount;
+                    account.setBalance(updatedBalance);
                     break;
                 }
             }
@@ -132,10 +137,27 @@ public class UserService {
             List<Expense> expenses = existingUser.getExpenses();
             for (Expense expense : expenses) {
                 if (expense.getExpenseId() == expenseId) {
+                    // Calculate the net expense difference
+                    double oldExpenseAmount = expense.getExpenseAmount();
+                    double newExpenseAmount = updatedExpense.getExpenseAmount();
+                    double expenseDifference = newExpenseAmount - oldExpenseAmount;
+
                     // Update the existing expense
                     expense.setCategory(updatedExpense.getCategory());
                     expense.setDate(updatedExpense.getDate());
-                    expense.setExpenseAmount(updatedExpense.getExpenseAmount());
+                    expense.setExpenseAmount(newExpenseAmount);
+
+                    // Update the balanceAmount of the corresponding Account
+                    List<Account> accounts = existingUser.getAccounts();
+                    for (Account account : accounts) {
+                        if (account.getExpenseId() != null && account.getExpenseId().contains(expenseId)) {
+                            double currentBalance = account.getBalance();
+                            double updatedBalance = currentBalance - expenseDifference;
+                            account.setBalance(updatedBalance);
+                            break; // Assuming expenseId is unique
+                        }
+                    }
+
                     // Save the updated user
                     return userRepository.save(existingUser);
                 }
@@ -143,6 +165,7 @@ public class UserService {
         }
         return null;
     }
+
     
     public User deleteExpenseByExpenseId(String username, int expenseId) {
         User existingUser = getUserByUsername(username);

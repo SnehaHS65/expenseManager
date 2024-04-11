@@ -55,7 +55,7 @@
 						<i class="fas fa-list icon dark--purple"></i>
 					</div>
 				</div>
-				
+				<!-- 
 				<div class="payment--card light--green">
 					<div class="card--header">
 						<div class="amount">
@@ -64,7 +64,7 @@
 						</div>
 						<i class="fas fa-users icon dark--green"></i>
 					</div>
-				</div> 
+				</div> -->
 
 				<div class="payment--card light--blue">
 					<div class="card--header">
@@ -196,8 +196,6 @@
 
 	<script>
 	document.addEventListener("DOMContentLoaded", () => {
-	
-	
 	    const loggedInUsername = sessionStorage.getItem("loggedInUsername");
 	    if (loggedInUsername) {
 	        document.getElementById("usernameDisplay").textContent = loggedInUsername;
@@ -239,7 +237,6 @@
 	                const updateTotals = (account) => {
 	                    document.getElementById("totalIncome").textContent = "$" + account.income.toFixed(2);
 	                    document.getElementById("totalBalanceAmount").textContent = "$" + account.balance.toFixed(2);
-	                    document.getElementById("totalLoanAmount").textContent = "$" + account.loanAmount.toFixed(2);
 	                    let totalExpenses = 0;
 	                    account.expenseId?.forEach(expenseId => {
 	                        const expense = user.expenses.find(expense => expense.expenseId === expenseId);
