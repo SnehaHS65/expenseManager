@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.user.pems.dto.Account;
 import com.user.pems.dto.Expense;
@@ -89,6 +91,31 @@ public class UserController {
     @PostMapping("/{username}/expenses/{accountNo}")
     public User addExpense(@PathVariable String username, @PathVariable String accountNo, @RequestBody Expense newExpense) {
         return userService.addExpense(username, accountNo, newExpense);
+    }
+    
+    @PutMapping("/{username}/expenses/{expenseId}")
+    public User updateExpenseByExpenseId(@PathVariable String username, @PathVariable int expenseId, @RequestBody Expense expense) {
+        return userService.updateExpenseByExpenseId(username, expenseId, expense);
+    }
+    
+    @DeleteMapping("/{username}/expenses/{expenseId}")
+    public String deleteExpenseByExpenseId(@PathVariable String username, @PathVariable int expenseId) {
+        User updatedUser = userService.deleteExpenseByExpenseId(username, expenseId);
+        if (updatedUser != null) {
+            return "Expense with ID " + expenseId + " deleted successfully.";
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense not found.");
+        }
+    }
+    
+    @GetMapping("/{username}/expenses/search/{accountNo}")
+    public ResponseEntity<List<Expense>> searchByDateOrCategory(@PathVariable String username, @PathVariable String accountNo, @RequestParam String searchCriteria) {
+        List<Expense> matchedExpenses = userService.searchByDateOrCategory(username, accountNo, searchCriteria);
+        if (matchedExpenses != null) {
+            return ResponseEntity.ok(matchedExpenses);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

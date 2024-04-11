@@ -126,5 +126,73 @@ public class UserService {
         }
         return null;
     }
+    public User updateExpenseByExpenseId(String username, int expenseId, Expense updatedExpense) {
+        User existingUser = getUserByUsername(username);
+        if (existingUser != null) {
+            List<Expense> expenses = existingUser.getExpenses();
+            for (Expense expense : expenses) {
+                if (expense.getExpenseId() == expenseId) {
+                    // Update the existing expense
+                    expense.setCategory(updatedExpense.getCategory());
+                    expense.setDate(updatedExpense.getDate());
+                    expense.setExpenseAmount(updatedExpense.getExpenseAmount());
+                    // Save the updated user
+                    return userRepository.save(existingUser);
+                }
+            }
+        }
+        return null;
+    }
+    
+    public User deleteExpenseByExpenseId(String username, int expenseId) {
+        User existingUser = getUserByUsername(username);
+        if (existingUser != null) {
+            List<Expense> expenses = existingUser.getExpenses();
+            for (Expense expense : expenses) {
+                if (expense.getExpenseId() == expenseId) {
+                    // Remove the expense from the list of expenses
+                    expenses.remove(expense);
+                   
+                    // Remove the expenseId from the associated account
+                    List<Account> accounts = existingUser.getAccounts();
+                    for (Account account : accounts) {
+                        if (account.getExpenseId().contains(expenseId)) {
+                            account.getExpenseId().remove(Integer.valueOf(expenseId));
+                            break;
+                        }
+                    }
+                   
+                    // Save the updated user
+                    return userRepository.save(existingUser);
+                }
+            }
+        }
+        return null;
+    }
+    public List<Expense> searchByDateOrCategory(String username, String accountNo, String searchCriteria) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            List<Expense> matchedExpenses = new ArrayList<>();
+            // Find the account with the given accountNo
+            Account account = user.getAccounts().stream()
+                                    .filter(acc -> acc.getAccountNo().equals(accountNo))
+                                    .findFirst()
+                                    .orElse(null);
+            if (account != null) {
+                // Get the list of expenseIds associated with the account
+                List<Integer> expenseIds = account.getExpenseId();
+                // Filter expenses based on expenseId and search criteria
+                for (Expense expense : user.getExpenses()) {
+                    if (expenseIds.contains(expense.getExpenseId()) &&
+                        (expense.getDate().equals(searchCriteria) || expense.getCategory().equalsIgnoreCase(searchCriteria))) {
+                        matchedExpenses.add(expense);
+                    }
+                }
+            }
+            return matchedExpenses;
+        }
+        return null;
+    }
+
 
 }
